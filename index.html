@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#020712">
+<meta name="description" content="NotPhade — Naruto, Boruto și Two Blue Vortex fan hub.">
+<title>NotPhade // Shinobi World</title>
+<style>
+:root{--blue:#168bff;--cyan:#35d7ff;--red:#ff214f;--ink:#020611}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--ink);color:#eaf7ff;font-family:Inter,Segoe UI,Arial,sans-serif}
+.stage{position:relative;width:100vw;height:100vh;isolation:isolate;overflow:hidden;background:#020611}
+.backdrop{position:absolute;inset:-1.5%;z-index:-5;overflow:hidden;animation:slowZoom 18s ease-in-out infinite alternate;transform-origin:center;background:#020611}.backdrop video{width:100%;height:100%;object-fit:cover;object-position:center;display:block;filter:saturate(1.12) contrast(1.06)}
+.shade{position:absolute;inset:0;z-index:-4;background:radial-gradient(ellipse at center,transparent 25%,rgba(0,3,12,.18) 58%,rgba(0,2,9,.78) 100%),linear-gradient(180deg,rgba(0,5,15,.5),transparent 23%,transparent 72%,rgba(0,3,12,.45));pointer-events:none}
+.scanlines{position:absolute;inset:0;z-index:4;pointer-events:none;opacity:.13;background:repeating-linear-gradient(to bottom,transparent 0px,transparent 3px,rgba(90,200,255,.23) 4px)}
+.vignette{position:absolute;inset:0;z-index:3;pointer-events:none;box-shadow:inset 0 0 140px rgba(0,0,0,.65)}
+.frame{position:absolute;inset:17px;z-index:5;border:1px solid rgba(63,181,255,.18);pointer-events:none}
+.frame:before,.frame:after{content:"";position:absolute;width:90px;height:2px;background:linear-gradient(90deg,var(--cyan),transparent);box-shadow:0 0 15px var(--blue)}
+.frame:before{top:-1px;left:-1px}.frame:after{bottom:-1px;right:-1px;transform:rotate(180deg)}
+.corner{position:absolute;width:22px;height:22px;border-color:var(--cyan);opacity:.8}
+.corner.tl{top:17px;left:17px;border-top:2px solid;border-left:2px solid}.corner.tr{top:17px;right:17px;border-top:2px solid;border-right:2px solid}.corner.bl{bottom:17px;left:17px;border-bottom:2px solid;border-left:2px solid}.corner.br{bottom:17px;right:17px;border-bottom:2px solid;border-right:2px solid}
+.hud{position:absolute;z-index:7;top:28px;left:34px;display:flex;align-items:center;gap:10px;color:#a6dfff;text-transform:uppercase;letter-spacing:2px;font-size:10px;font-weight:800;text-shadow:0 0 12px #007dff;animation:fadeDown .8s both}
+.hud .pulse{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 13px var(--cyan);animation:blink 1.2s infinite}
+.version{position:absolute;z-index:7;right:35px;top:27px;text-align:right;color:#9acfff;font:700 10px/1.8 Consolas,monospace;letter-spacing:1.5px;text-shadow:0 0 10px #006dff}
+.bottom-label{position:absolute;z-index:7;left:35px;bottom:30px;color:rgba(125,194,255,.75);font:700 9px/1.8 Consolas,monospace;letter-spacing:1.5px}
+.bottom-label strong{color:#d7f5ff}
+.signature{position:absolute;z-index:7;right:35px;bottom:30px;color:rgba(105,188,255,.8);font:700 9px Consolas,monospace;letter-spacing:2px}
+.hero-content{position:absolute;z-index:8;left:50%;top:53%;transform:translate(-50%,-50%);width:min(760px,90vw);text-align:center;animation:heroIn 1s both}
+.brand-mark{font-size:clamp(42px,8vw,100px);font-weight:1000;line-height:.95;letter-spacing:-.07em;font-style:italic;text-transform:uppercase;color:#f4fbff;text-shadow:0 0 8px #fff,0 0 24px #078dff,0 0 52px #006bff}
+.brand-mark span{color:#20caff}
+.subtitle{margin:18px 0 10px;color:#7de7ff;font:800 clamp(9px,1.2vw,13px) Consolas,monospace;letter-spacing:clamp(2px,.65vw,7px);text-transform:uppercase}
+.tagline{margin:0 auto 27px;color:#eaf7ff;font:700 11px Consolas,monospace;letter-spacing:3px;text-shadow:0 0 12px #007dff}
+.actions{display:flex;justify-content:center;align-items:stretch;gap:18px;flex-wrap:wrap}
+.action-btn{min-width:230px;min-height:68px;padding:13px 22px;display:flex;align-items:center;justify-content:center;gap:14px;border-radius:13px;text-decoration:none;text-align:left;text-transform:uppercase;font-weight:900;letter-spacing:1px;backdrop-filter:blur(14px);transition:transform .2s,box-shadow .2s,filter .2s;border:1px solid rgba(100,190,255,.55);color:#eaf7ff;background:linear-gradient(120deg,rgba(2,12,30,.94),rgba(2,28,59,.75));box-shadow:0 0 22px rgba(0,115,255,.18),inset 0 0 20px rgba(0,125,255,.08);cursor:pointer}
+.action-btn:hover{transform:translateY(-3px);filter:brightness(1.18)}
+.action-btn.youtube{border:1px solid #ff315b;box-shadow:0 0 26px rgba(255,25,75,.35),inset 0 0 22px rgba(255,25,75,.12);animation:redPulse 2.4s infinite}
+.action-btn.discord{opacity:.9;cursor:default}
+.action-icon{font-size:28px;line-height:1}
+.action-copy{display:flex;flex-direction:column;gap:5px;font-size:13px}
+.action-copy small{font-size:10px;letter-spacing:1px;font-weight:600;opacity:.72;text-transform:none}
+.sound-btn{position:absolute;z-index:12;right:35px;bottom:75px;border:1px solid rgba(85,190,255,.55);border-radius:999px;background:rgba(1,9,24,.78);color:#c8f3ff;padding:11px 15px;font:700 10px Consolas,monospace;letter-spacing:1px;cursor:pointer;backdrop-filter:blur(12px);box-shadow:0 0 18px rgba(0,120,255,.2)}
+.sound-btn:hover{background:rgba(0,60,120,.85)}
+@keyframes heroIn{from{opacity:0;transform:translate(-50%,-46%)}to{opacity:1;transform:translate(-50%,-50%)}}
+.particle{position:absolute;z-index:2;width:3px;height:3px;background:#9eeaff;border-radius:50%;box-shadow:0 0 10px 2px rgba(0,151,255,.8);pointer-events:none;animation:floatUp linear infinite}
+.p1{left:12%;bottom:-10px;animation-duration:9s}.p2{left:26%;bottom:-20px;animation-duration:12s;animation-delay:-5s}.p3{left:71%;bottom:-10px;animation-duration:10s;animation-delay:-2s}.p4{left:88%;bottom:-20px;animation-duration:13s;animation-delay:-7s}.p5{left:48%;bottom:-15px;animation-duration:11s;animation-delay:-4s}
+#cursorGlow{position:absolute;z-index:1;width:300px;height:300px;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(0,118,255,.11),transparent 70%);pointer-events:none;mix-blend-mode:screen;transition:left .15s,top .15s}
+@keyframes slowZoom{from{transform:scale(1)}to{transform:scale(1.075) translate3d(-.4%,.4%,0)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-9px)}to{opacity:1;transform:translateY(0)}}
+@keyframes floatUp{0%{transform:translate3d(0,0,0) scale(.4);opacity:0}12%{opacity:.8}75%{opacity:.6}100%{transform:translate3d(30px,-105vh,0) scale(1.4);opacity:0}}
+@keyframes redPulse{0%,100%{opacity:.35;inset:-3px}50%{opacity:.9;inset:-6px}}
+@keyframes bluePulse{0%,100%{opacity:.18}50%{opacity:.65}}
+@media(max-width:760px){
+ .backdrop{background-position:center center;animation:slowZoom 24s ease-in-out infinite alternate}
+ .shade{background:linear-gradient(180deg,rgba(0,3,12,.5),rgba(0,3,12,.05) 35%,rgba(0,3,12,.2) 55%,rgba(0,3,12,.9) 100%)}
+ .hud{top:26px;left:26px;font-size:9px;letter-spacing:1px}.version{top:48px;right:26px;font-size:8px}
+ .frame{inset:10px}.corner.tl,.corner.tr{top:10px}.corner.bl,.corner.br{bottom:10px}.corner.tl,.corner.bl{left:10px}.corner.tr,.corner.br{right:10px}
+ .hero-content{top:53%;width:88vw}
+ .brand-mark{font-size:clamp(42px,13vw,76px)}
+ .subtitle{letter-spacing:2px;line-height:1.8;margin-top:14px}
+ .tagline{letter-spacing:1px;margin-bottom:20px;font-size:9px}
+ .actions{display:grid;grid-template-columns:1fr;gap:10px;width:min(330px,100%);margin:auto}
+ .action-btn{min-width:0;width:100%;min-height:56px;padding:10px 16px}
+ .action-icon{font-size:23px}
+ .action-copy{font-size:12px}
+ .sound-btn{right:23px;bottom:68px;padding:9px 12px;font-size:9px}
+ .bottom-label{bottom:20px;left:22px}.signature{bottom:20px;right:22px}
+ .bottom-label{left:24px;bottom:24px;font-size:8px}.signature{right:24px;bottom:24px;font-size:8px}
+}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<main class="stage" id="stage">
+ <div class="backdrop" aria-hidden="true"><video id="bgVideo" autoplay muted loop playsinline preload="auto"><source src="loading.mp4" type="video/mp4">Browserul tău nu suportă video HTML5.</video></div><div class="shade"></div><div id="cursorGlow"></div>
+ <div class="scanlines"></div><div class="vignette"></div><div class="frame"></div>
+ <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+ <div class="hud"><span class="pulse"></span><span>C:\NotPhade&gt; Welcome to the Shinobi World...</span></div>
+ <div class="version">ANIME FAN PROJECT<br><span style="color:#45d7ff">NARUTO / BORUTO / TBV</span></div>
+ <div class="bottom-label"><strong>STATUS: ONLINE</strong><br>THE NEXT GENERATION NEVER STOPS.</div>
+ <div class="signature">NOTPHADE © <span id="year"></span></div>
+ <section class="hero-content" aria-label="NotPhade anime fan hub">
+   <div class="brand-mark">NOT<span>PHADE</span></div>
+   <p class="subtitle">NARUTO / BORUTO / TWO BLUE VORTEX</p>
+   <p class="tagline">STAY CONNECTED&nbsp; · &nbsp;STAY SHINOBI</p>
+   <div class="actions">
+     <a class="action-btn youtube" href="https://www.youtube.com/@NotPhade" target="_blank" rel="noopener noreferrer"><span class="action-icon">▶</span><span class="action-copy">WATCH ON YOUTUBE<small>youtube.com/@NotPhade</small></span><span aria-hidden="true">↗</span></a>
+     <div class="action-btn discord" aria-label="Discord disponibil în curând"><span class="action-icon">◉</span><span class="action-copy">DISCORD<small>SOON — COMING SOON</small></span></div>
+   </div>
+ </section>
+ <button class="sound-btn" id="soundToggle" type="button" aria-pressed="false">♫ ENABLE VIDEO SOUND</button>
+ <span class="particle p1"></span><span class="particle p2"></span><span class="particle p3"></span><span class="particle p4"></span><span class="particle p5"></span>
+</main>
+<script>
+document.getElementById('year').textContent=new Date().getFullYear();
+const stage=document.getElementById('stage'), glow=document.getElementById('cursorGlow');
+stage.addEventListener('pointermove',e=>{glow.style.left=e.clientX+'px';glow.style.top=e.clientY+'px'});
+const video=document.getElementById('bgVideo'), soundButton=document.getElementById('soundToggle');
+soundButton.addEventListener('click', async ()=>{
+  try {
+    if(video.muted){ video.muted=false; video.volume=0.8; await video.play(); soundButton.textContent='♫ MUTE VIDEO SOUND'; soundButton.setAttribute('aria-pressed','true'); }
+    else { video.muted=true; soundButton.textContent='♫ ENABLE VIDEO SOUND'; soundButton.setAttribute('aria-pressed','false'); }
+  } catch(err) { video.muted=true; soundButton.textContent='CLICK TO ENABLE SOUND'; soundButton.setAttribute('aria-pressed','false'); }
+});
+video.addEventListener('error',()=>{console.warn('Nu s-a putut încărca loading.mp4. Verifică numele și locația fișierului.');});
+</script>
+</body>
+</html>
